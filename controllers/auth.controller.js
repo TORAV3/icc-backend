@@ -10,14 +10,42 @@ const {
 } = require("../configs/response");
 const { user } = require("../models/index.model");
 
-const registerController = async (req, res, startTime) => {
+const registerUserController = async (req, res, startTime) => {
   Object.keys(req.body).forEach((key) => {
     if (req.body[key] === "") {
       req.body[key] = null;
     }
   });
 
-  const { fullname, email, phone, password } = req.body;
+  const {
+    fullname,
+    email,
+    phone,
+    password,
+    program_type,
+    address_indo,
+    address_japan,
+    company_name,
+    address_company,
+    association_name,
+    address_association,
+    career_history,
+    rejected,
+    rejected_detail,
+    work_field,
+    contract_period,
+    my_number,
+    upload_file,
+    ktp,
+    zairyoukado,
+    ijazah,
+    certificate,
+    certificate_field,
+    cv,
+    immigration_passport,
+    latest_passport,
+    photograph,
+  } = req.body;
 
   try {
     const hashedPassword = await bcrypt.hash(password, 10);
@@ -27,6 +55,29 @@ const registerController = async (req, res, startTime) => {
       email,
       phone,
       password: hashedPassword,
+      program_type,
+      address_indo,
+      address_japan,
+      company_name,
+      address_company,
+      association_name,
+      address_association,
+      career_history,
+      rejected,
+      rejected_detail,
+      work_field,
+      contract_period,
+      my_number,
+      upload_file,
+      ktp,
+      zairyoukado,
+      ijazah,
+      certificate,
+      certificate_field,
+      cv,
+      immigration_passport,
+      latest_passport,
+      photograph,
     });
 
     const timeExecution = Date.now() - startTime;
@@ -62,7 +113,7 @@ const registerController = async (req, res, startTime) => {
       );
     }
 
-    console.log(error);
+    console.error(error);
     const timeExecution = Date.now() - startTime;
     return internalServerErrorResponse(res, timeExecution);
   }
@@ -108,6 +159,6 @@ const loginController = async (req, res, startTime) => {
 };
 
 module.exports = {
-  registerController,
+  registerUserController,
   loginController,
 };

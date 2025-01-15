@@ -9,14 +9,19 @@ const { sequelize } = require("./models/index.model");
 const { errorValidationResponse } = require("./configs/response");
 
 const {
-  validateRegister,
+  validateRegisteUser,
   validateLogin,
 } = require("./validators/auth.validator");
 
 const {
-  registerController,
+  registerUserController,
   loginController,
 } = require("./controllers/auth.controller");
+
+const {
+  getAllUserController,
+  getUserByIdController,
+} = require("./controllers/user.controller");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -43,20 +48,6 @@ app.use(
 
 const router = express.Router();
 
-// register
-router.post("/register", validateRegister, (req, res) => {
-  const startTime = Date.now();
-
-  const errors = validationResult(req);
-  if (!errors.isEmpty()) {
-    const timeExecution = Date.now() - startTime;
-
-    return errorValidationResponse(res, errors, timeExecution);
-  }
-
-  registerController(req, res, startTime);
-});
-
 // login
 router.post("/login", validateLogin, (req, res) => {
   const startTime = Date.now();
@@ -71,7 +62,27 @@ router.post("/login", validateLogin, (req, res) => {
   loginController(req, res, startTime);
 });
 
-app.use("/iso/api", router);
+// register user
+router.post("/register/user", validateRegisteUser, (req, res) => {
+  const startTime = Date.now();
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const timeExecution = Date.now() - startTime;
+
+    return errorValidationResponse(res, errors, timeExecution);
+  }
+
+  registerUserController(req, res, startTime);
+});
+
+// get all user
+router.get("/user", getAllUserController);
+
+// get user by id
+router.get("/user/:id", getUserByIdController);
+
+app.use("/icc/api", router);
 
 sequelize
   .sync({ force: false })
