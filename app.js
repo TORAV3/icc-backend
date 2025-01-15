@@ -9,12 +9,14 @@ const { sequelize } = require("./models/index.model");
 const { errorValidationResponse } = require("./configs/response");
 
 const {
-  validateRegisteUser,
+  validateRegisterUser,
+  validateRegisterCompany,
   validateLogin,
 } = require("./validators/auth.validator");
 
 const {
   registerUserController,
+  registerCompanyController,
   loginController,
 } = require("./controllers/auth.controller");
 
@@ -22,6 +24,11 @@ const {
   getAllUserController,
   getUserByIdController,
 } = require("./controllers/user.controller");
+
+const {
+  getAllCompanyController,
+  getCompanyByIdController,
+} = require("./controllers/company.controller");
 
 const app = express();
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -63,7 +70,7 @@ router.post("/login", validateLogin, (req, res) => {
 });
 
 // register user
-router.post("/register/user", validateRegisteUser, (req, res) => {
+router.post("/register/user", validateRegisterUser, (req, res) => {
   const startTime = Date.now();
 
   const errors = validationResult(req);
@@ -81,6 +88,26 @@ router.get("/user", getAllUserController);
 
 // get user by id
 router.get("/user/:id", getUserByIdController);
+
+// register perusahaan
+router.post("/register/perusahaan", validateRegisterCompany, (req, res) => {
+  const startTime = Date.now();
+
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    const timeExecution = Date.now() - startTime;
+
+    return errorValidationResponse(res, errors, timeExecution);
+  }
+
+  registerCompanyController(req, res, startTime);
+});
+
+// get all perusahaan
+router.get("/perusahaan", getAllCompanyController);
+
+// get user perusahaan id
+router.get("/perusahaan/:id", getCompanyByIdController);
 
 app.use("/icc/api", router);
 
