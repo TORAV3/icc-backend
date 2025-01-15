@@ -1,6 +1,6 @@
 const { body } = require("express-validator");
 
-const validateRegisteUser = [
+const validateRegisterUser = [
   body("fullname")
     .isLength({ max: 60 })
     .withMessage("Nama lengkap tidak boleh lebih dari 60 karakter.")
@@ -92,6 +92,47 @@ const validateRegisteUser = [
   body("photograph").notEmpty().withMessage("Pas Foto tidak boleh kosong"),
 ];
 
+const validateRegisterCompany = [
+  body("email")
+    .isLength({ max: 60 })
+    .withMessage("Email tidak boleh lebih dari 60 karakter.")
+    .trim()
+    .notEmpty()
+    .withMessage("Email tidak boleh kosong")
+    .isEmail()
+    .withMessage("Format email tidak valid."),
+  body("password").trim().notEmpty().withMessage("Password tidak boleh kosong"),
+  body("address_company")
+    .notEmpty()
+    .withMessage("Alamat perusahaan tidak boleh kosong")
+    .isLength({ max: 255 })
+    .withMessage("Alamat perusahaan tidak boleh lebih dari 255 karakter."),
+  body("country")
+    .isLength({ max: 20 })
+    .withMessage("Negara tidak boleh lebih dari 20 karakter.")
+    .trim()
+    .notEmpty()
+    .withMessage("Negara tidak boleh kosong"),
+  body("pic_name")
+    .isLength({ max: 60 })
+    .withMessage("Nama PIC tidak boleh lebih dari 60 karakter.")
+    .trim()
+    .notEmpty()
+    .withMessage("Nama PIC tidak boleh kosong"),
+  body("pic_number")
+    .isLength({ max: 20 })
+    .withMessage("Nomor PIC tidak boleh lebih dari 20 karakter.")
+    .trim()
+    .notEmpty()
+    .withMessage("Nomor PIC tidak boleh kosong"),
+  body("business_sector")
+    .isLength({ max: 20 })
+    .withMessage("Sektor bisnis tidak boleh lebih dari 20 karakter.")
+    .trim()
+    .notEmpty()
+    .withMessage("Sektor bisnis tidak boleh kosong"),
+];
+
 const validateLogin = [
   body("email")
     .isLength({ max: 60 })
@@ -103,6 +144,7 @@ const validateLogin = [
 ];
 
 module.exports = {
-  validateRegisteUser,
+  validateRegisterUser,
+  validateRegisterCompany,
   validateLogin,
 };

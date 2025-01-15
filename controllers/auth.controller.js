@@ -9,6 +9,7 @@ const {
   successResponse,
 } = require("../configs/response");
 const { user } = require("../models/index.model");
+const { company } = require("../models/index.model");
 
 const registerUserController = async (req, res, startTime) => {
   Object.keys(req.body).forEach((key) => {
@@ -119,6 +120,69 @@ const registerUserController = async (req, res, startTime) => {
   }
 };
 
+const registerCompanyController = async (req, res, startTime) => {
+  Object.keys(req.body).forEach((key) => {
+    if (req.body[key] === "") {
+      req.body[key] = null;
+    }
+  });
+
+  const {
+    email,
+    password,
+    address_company,
+    country,
+    pic_name,
+    pic_number,
+    business_sector,
+  } = req.body;
+
+  try {
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    await company.create({
+      email,
+      password: hashedPassword,
+      address_company,
+      country,
+      pic_name,
+      pic_number,
+      business_sector,
+    });
+
+    const timeExecution = Date.now() - startTime;
+    return successCreatedResponse(
+      res,
+      "Proses pendaftaran perusahaan berhasil",
+      timeExecution
+    );
+  } catch (error) {
+    if (error instanceof Sequelize.UniqueConstraintError) {
+      let fieldName;
+      const field = error.errors[0].path;
+      switch (field) {
+        case "email":
+          fieldName = "Email";
+          break;
+        default:
+          fieldName = field;
+          break;
+      }
+      const value = error.errors[0].value;
+      const timeExecution = Date.now() - startTime;
+      return badRequestResponse(
+        res,
+        `Data '${value}' pada '${fieldName}' sudah terdaftar.`,
+        timeExecution
+      );
+    }
+
+    console.error(error);
+    const timeExecution = Date.now() - startTime;
+    return internalServerErrorResponse(res, timeExecution);
+  }
+};
+
 const loginController = async (req, res, startTime) => {
   const { email, password } = req.body;
 
@@ -160,5 +224,6 @@ const loginController = async (req, res, startTime) => {
 
 module.exports = {
   registerUserController,
+  registerCompanyController,
   loginController,
 };
