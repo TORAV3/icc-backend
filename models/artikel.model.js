@@ -1,44 +1,40 @@
 module.exports = (sequelize, DataTypes) => {
-  const company = sequelize.define(
-    "company",
+  const artikel = sequelize.define(
+    "artikel",
     {
       id: {
         type: DataTypes.INTEGER,
         autoIncrement: true,
         primaryKey: true,
       },
-      email: {
-        type: DataTypes.STRING(60),
-        allowNull: false,
-        unique: true,
-      },
-      password: {
-        type: DataTypes.STRING(60),
+      title: {
+        type: DataTypes.STRING(100),
         allowNull: false,
       },
-      address_company: {
+      category: {
+        type: DataTypes.STRING(50),
+        allowNull: false,
+      },
+      description: {
         type: DataTypes.TEXT,
         allowNull: false,
       },
-      country: {
-        type: DataTypes.STRING(20),
+      thumbnail: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      publishdate: {
+        type: DataTypes.DATE,
         allowNull: false,
       },
-      pic_name: {
-        type: DataTypes.STRING(60),
+      status: {
+        type: DataTypes.ENUM("draft", "published", "archived"),
         allowNull: false,
-      },
-      pic_number: {
-        type: DataTypes.STRING(20),
-        allowNull: false,
-      },
-      business_sector: {
-        type: DataTypes.STRING(20),
-        allowNull: false,
+        defaultValue: "draft",
       },
     },
     {
-      tableName: "companies",
+      tableName: "artikels",
       timestamps: true,
       paranoid: true,
       createdAt: "created_at",
@@ -47,5 +43,5 @@ module.exports = (sequelize, DataTypes) => {
     }
   );
 
-  return company;
+  return artikel;
 };
