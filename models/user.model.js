@@ -7,123 +7,36 @@ module.exports = (sequelize, DataTypes) => {
         autoIncrement: true,
         primaryKey: true,
       },
-      fullname: {
-        type: DataTypes.STRING(60),
-        allowNull: false,
-        unique: true,
-      },
       email: {
         type: DataTypes.STRING(60),
         allowNull: false,
         unique: true,
       },
-      phone: {
-        type: DataTypes.STRING(14),
-        allowNull: false,
-      },
       password: {
         type: DataTypes.STRING(60),
         allowNull: false,
       },
-      program_type: {
-        type: DataTypes.STRING(10),
-        allowNull: false,
-      },
-      address_indo: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-      address_japan: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-      company_name: {
-        type: DataTypes.STRING(60),
-        allowNull: false,
-      },
-      address_company: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-      association_name: {
-        type: DataTypes.STRING(60),
-        allowNull: false,
-      },
-      address_association: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-      career_history: {
-        type: DataTypes.TEXT,
-        allowNull: false,
-      },
-      rejected: {
-        type: DataTypes.STRING(10),
-        allowNull: false,
-      },
-      rejected_detail: {
-        type: DataTypes.STRING(60),
+      status: {
+        type: DataTypes.STRING(20),
         allowNull: true,
+        defaultValue: "register",
       },
-      work_field: {
-        type: DataTypes.STRING(60),
+      roleId: {
+        type: DataTypes.INTEGER,
+        allowNull: true,
+        references: {
+          model: "roles",
+          key: "id",
+        },
+      },
+      type: {
+        type: DataTypes.STRING(15),
         allowNull: false,
       },
-      contract_period: {
-        type: DataTypes.STRING(60),
-        allowNull: false,
-      },
-      my_number: {
-        type: DataTypes.STRING(60),
-        allowNull: false,
-      },
-      upload_file: {
-        type: DataTypes.STRING(60),
-        allowNull: false,
-      },
-      upload_file: {
-        type: DataTypes.STRING(60),
-        allowNull: false,
-      },
-      ktp: {
-        type: DataTypes.STRING(60),
-        allowNull: false,
-      },
-      zairyoukado: {
-        type: DataTypes.STRING(60),
-        allowNull: false,
-      },
-      ijazah: {
-        type: DataTypes.STRING(60),
-        allowNull: false,
-      },
-      certificate: {
-        type: DataTypes.STRING(60),
-        allowNull: false,
-      },
-      certificate: {
-        type: DataTypes.STRING(60),
-        allowNull: false,
-      },
-      certificate_field: {
-        type: DataTypes.STRING(60),
-        allowNull: false,
-      },
-      cv: {
-        type: DataTypes.STRING(60),
-        allowNull: false,
-      },
-      immigration_passport: {
-        type: DataTypes.STRING(60),
-        allowNull: false,
-      },
-      latest_passport: {
-        type: DataTypes.STRING(60),
-        allowNull: false,
-      },
-      photograph: {
-        type: DataTypes.STRING(60),
-        allowNull: false,
+      activeStatus: {
+        type: DataTypes.STRING(1),
+        allowNull: true,
+        defaultValue: "1",
       },
     },
     {
@@ -135,6 +48,13 @@ module.exports = (sequelize, DataTypes) => {
       deletedAt: "deleted_at",
     }
   );
+
+  user.associate = (models) => {
+    user.hasOne(models.userDetail, { foreignKey: "userId" });
+    user.hasOne(models.companyDetail, { foreignKey: "companyId" });
+    user.belongsTo(models.role, { foreignKey: "roleId" });
+    user.hasOne(models.access, { foreignKey: "userId" });
+  };
 
   return user;
 };
